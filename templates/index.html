@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Script Trigger</title>
+</head>
+
+<body>
+    <h1>Upload Images Individually</h1>
+
+    <form id="image1Form" action="/upload?image=image1" method="post" enctype="multipart/form-data">
+        <label for="image1">Upload Image 1:</label>
+        <input type="file" name="image1" id="image1" onchange="document.getElementById('image1Form').submit()">
+    </form>
+    {{ if .Image1 }}<img src="{{ .Image1 }}?t={{ .Timestamp }}" alt="Image 1" width="150"><br>{{ end }}
+    <br>
+
+    <form id="image2Form" action="/upload?image=image2" method="post" enctype="multipart/form-data">
+        <label for="image2">Upload Image 2:</label>
+        <input type="file" name="image2" id="image2" onchange="document.getElementById('image2Form').submit()">
+    </form>
+    {{ if .Image2 }}<img src="{{ .Image2 }}?t={{ .Timestamp }}" alt="Image 2" width="150"><br>{{ end }}
+    <br>
+
+    <form id="image3Form" action="/upload?image=image3" method="post" enctype="multipart/form-data">
+        <label for="image3">Upload Image 3:</label>
+        <input type="file" name="image3" id="image3" onchange="document.getElementById('image3Form').submit()">
+    </form>
+    {{ if .Image3 }}<img src="{{ .Image3 }}?t={{ .Timestamp }}" alt="Image 3" width="150"><br>{{ end }}
+
+    <h1>Run Script</h1>
+    <form id="runScriptForm" action="/run-script" method="post">
+        <button type="submit">Run Script on Host</button>
+    </form>
+
+    <div id="scriptOutput"></div>
+</body>
+
+<script>
+    document.getElementById("runScriptForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const form = event.target;
+
+        fetch(form.action, {
+            method: form.method,
+        })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("scriptOutput").innerText = data;
+            })
+            .catch(error => {
+                console.error("Error running the script:", error);
+                document.getElementById("scriptOutput").innerText = "An error occurred.";
+            });
+    });
+</script>
+
+</html>
